@@ -1,4 +1,4 @@
-export class CreateTrackDTO {
+export class CreateTrackDto {
   title: string;
   album: string;
   time: string;

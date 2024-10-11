@@ -16,12 +16,14 @@ import { Model } from 'mongoose';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateAlbumDTO } from './create-album.dto';
 import { ArtistDocument } from '../schemas/artist.schema';
+import { TrackDocument } from '../schemas/track.schema';
 
 @Controller('albums')
 export class AlbumsController {
   constructor(
     @InjectModel('Album') private albumModel: Model<AlbumDocument>,
     @InjectModel('Artist') private artistModel: Model<ArtistDocument>,
+    @InjectModel('Track') private trackModel: Model<TrackDocument>,
   ) {}
 
   @Get()
@@ -62,8 +64,16 @@ export class AlbumsController {
     if (!album) {
       throw new NotFoundException('Album with this id not found');
     }
-
+    const tracks = await this.trackModel.find({ album: album._id });
+    if (tracks.length > 0) {
+      for (const track of tracks) {
+        await track.deleteOne();
+      }
+    }
     await album.deleteOne();
-    return { album: album, flag: 'deleted successfully' };
+    return {
+      album: album,
+      flag: 'album and child tracks deleted successfully',
+    };
   }
 }

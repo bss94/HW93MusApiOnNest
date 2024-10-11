@@ -6,14 +6,13 @@ import {
   NotFoundException,
   Param,
   Post,
-  Req,
-  UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AlbumDocument } from '../schemas/album.schema';
 import { TrackDocument } from '../schemas/track.schema';
-import { CreateTrackDTO } from './create-track.dto';
+import { CreateTrackDto } from './create-track.dto';
 
 @Controller('tracks')
 export class TracksController {
@@ -23,12 +22,12 @@ export class TracksController {
   ) {}
 
   @Get()
-  async getTracks(@Param('album') album: string) {
+  async getTracks(@Query('album') album: string) {
     return this.trackModel.find(album ? { album: album } : {});
   }
 
   @Post()
-  async createTrack(@Body() trackData: CreateTrackDTO) {
+  async createTrack(@Body() trackData: CreateTrackDto) {
     const album = await this.albumModel.findById(trackData.album);
     if (!album) {
       throw new NotFoundException('Album with this id not found');
@@ -43,11 +42,11 @@ export class TracksController {
 
   @Delete(':id')
   async deleteTrack(@Param('id') id: string) {
-    const track = this.trackModel.findById(id);
+    const track = await this.trackModel.findById(id);
     if (!track) {
       throw new NotFoundException('Track with this id not found');
     }
-    track.deleteOne();
+    await track.deleteOne();
     return { track: track, flag: 'deleted successfully' };
   }
 }
