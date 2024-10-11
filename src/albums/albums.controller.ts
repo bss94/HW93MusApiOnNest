@@ -57,7 +57,7 @@ export class AlbumsController {
   }
 
   @Delete(':id')
-  async deleteArtist(@Param('id') id: string) {
+  async deleteAlbum(@Param('id') id: string) {
     const album = await this.albumModel.findById(id);
     if (!album) {
       throw new NotFoundException('Album with this id not found');

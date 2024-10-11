@@ -54,8 +54,7 @@ export class ArtistsController {
     if (!artist) {
       throw new NotFoundException('Artist with this id not found');
     }
-
     await artist.deleteOne();
-    return artist;
+    return { artist: artist, flag: 'deleted successfully' };
   }
 }
