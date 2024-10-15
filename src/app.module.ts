@@ -13,6 +13,8 @@ import { UsersController } from './users/users.controller';
 import { AuthService } from './auth/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './auth/local.strategy';
+import { UniqueUserEmailConstraint } from './users/validators/unique-user-email.validator';
+import { IdExistConstraint } from './global/validators/id-exist.validator';
 
 @Module({
   imports: [
@@ -32,6 +34,12 @@ import { LocalStrategy } from './auth/local.strategy';
     TracksController,
     UsersController,
   ],
-  providers: [AppService, AuthService, LocalStrategy],
+  providers: [
+    AppService,
+    AuthService,
+    LocalStrategy,
+    UniqueUserEmailConstraint,
+    IdExistConstraint,
+  ],
 })
 export class AppModule {}
