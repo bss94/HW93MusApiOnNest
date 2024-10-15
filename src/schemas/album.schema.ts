@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Validator, ValidatorFunction } from 'mongoose';
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { Artist } from './artist.schema';
 
 export type AlbumDocument = Album & Document;

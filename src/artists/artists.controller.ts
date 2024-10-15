@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { Artist, ArtistDocument } from '../schemas/artist.schema';
@@ -16,6 +17,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateArtistDTO } from './create-artist.dto';
 import { AlbumDocument } from '../schemas/album.schema';
 import { TrackDocument } from '../schemas/track.schema';
+import { TokenAuthGuard } from '../auth/token-auth.guard';
+import { TokenAuthAdminGuard } from '../auth/token-auth-admin.guard';
 
 @Controller('artists')
 export class ArtistsController {
@@ -39,6 +42,7 @@ export class ArtistsController {
     return artist;
   }
 
+  @UseGuards(TokenAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('photo', { dest: './public/images' }))
   async createArtist(
@@ -52,6 +56,7 @@ export class ArtistsController {
     });
   }
 
+  @UseGuards(TokenAuthAdminGuard)
   @Delete(':id')
   async deleteArtist(@Param('id') id: string) {
     const artist = await this.artistModel.findById(id);

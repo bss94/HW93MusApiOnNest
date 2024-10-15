@@ -34,7 +34,7 @@ UserSchema.methods.generateToken = function () {
 UserSchema.methods.checkPassword = function (password: string) {
   return compare(password, this.password);
 };
-UserSchema.pre<UserDocument>('save', async function (next) {
+UserSchema.pre<UserDocument>('save', async function () {
   if (!this.isModified('password')) {
     return;
   }
